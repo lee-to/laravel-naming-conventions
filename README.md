@@ -24,6 +24,7 @@ Laravel наш помощник, но он будет помогать лишь 
   - [Acccessors/Mutators](#models-am)
   - [Local scopes](#models-scopes)
   - [Отношения](#models-relations)
+- [Миграции](#migrations)
 - [Фабрики](#factories)
 - [Политики/Policy](#policies)
 - [Директории](#directories)
@@ -198,6 +199,71 @@ camelCase с префиксом scope
 - Может потребоваться указать `foreign_key` `return $this->hasOne(Phone::class, 'foreign_key');`
 - Может потребоваться указать `foreign_key` и `local_key` `return $this->hasOne(Phone::class, 'foreign_key', 'local_key');`
 - Может потребоваться указать и связующую таблицу и ключи `return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');`
+
+<a name="migrations" />
+
+### Миграции
+`php artisan make:migration migration_name`
+
+Команда выше просто создаст пустой файл миграции, где методы up и down будут пустыми.
+
+```php
+public function up()
+{
+  //
+}
+
+public function down()
+{
+  //
+}
+```
+
+Но мы также можем влиять на содержимое миграций, если будем придерживаться правил наименования, тем самым упрощая нам жизнь.
+
+`php artisan make:migration create_users_table`
+
+Мы дали понять, что хотим создать таблицу users - `create_{Имя_таблицы}_table`
+
+Ключевое здесь `create_{Имя_таблицы}`, а вот table в конце можно пропустить
+
+В итоге получили:
+
+```php
+public function up()
+{
+    Schema::create('users', function (Blueprint $table) {
+        $table->id();
+        $table->timestamps();
+    });
+}
+
+public function down()
+{
+    Schema::dropIfExists('users');
+}
+```
+
+
+`php artisan make:migration add_column_to_users_table`
+
+В данном примере мы сообщаем Laravel о нашем желании модифицировать таблицу и ключевое здесь `to_{Имя_таблицы}`, а вот table в конце можно пропустить
+
+```php
+public function up()
+{
+    Schema::table('users', function (Blueprint $table) {
+        //
+    });
+}
+
+public function down()
+{
+    Schema::table('users', function (Blueprint $table) {
+        //
+    });
+}
+```
 
 <a name="factories" />
 
